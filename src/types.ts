@@ -1,3 +1,15 @@
+export enum UserType {
+  CARRIER = "carrier",
+  CUSTOMER = "customer,",
+}
+
+export interface DGEUser {
+  id: string;
+  name: string;
+  type: UserType;
+  locations?: Location[];
+}
+
 export interface Location {
   id: number;
   user_id: number;
@@ -24,4 +36,7 @@ export interface Appointment {
   customer_id: number;
   carrier_id: number;
   appointment_status: AppointmentStatus;
+  customer: DGEUser;
+  carrier: DGEUser;
+  pickup_location: Location;
 }

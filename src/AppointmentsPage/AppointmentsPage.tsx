@@ -113,9 +113,9 @@ function AppointmentsPage() {
             {appointments?.map((row) => (
               <TableRow key={row.id} hover>
                 <TableCell component="th" scope="row">
-                  {row.carrier_id}
+                  {row.carrier.name}
                 </TableCell>
-                <TableCell>{row.pickup_location_id}</TableCell>
+                <TableCell>{row.pickup_location.address}</TableCell>
                 <TableCell>{row.appointment_date.toString()}</TableCell>
                 <TableCell>
                   <Chip label={row.appointment_status} />
