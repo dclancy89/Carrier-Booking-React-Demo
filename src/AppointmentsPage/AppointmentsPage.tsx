@@ -1,4 +1,5 @@
 import * as React from "react";
+import axios from "axios";
 
 import {
   Button,
@@ -13,7 +14,10 @@ import {
   Typography,
 } from "@mui/material";
 
+import { Appointment } from "../types";
+
 import BookAppointment from "./components/BookAppointment/BookAppointment";
+import { useParams } from "react-router-dom";
 
 const appointments = [
   {
@@ -63,8 +67,22 @@ const appointments = [
   },
 ];
 
-function Appointment() {
+function AppointmentsPage() {
+  const { id } = useParams();
   const [open, setOpen] = React.useState(false);
+  const [appointments, setAppointments] = React.useState<Appointment[] | null>(
+    []
+  );
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    axios
+      .get(`http://localhost:3000/appointments/customer/${id}`)
+      .then((res) => {
+        setAppointments(res.data);
+        setLoading(false);
+      });
+  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -92,15 +110,15 @@ function Appointment() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {appointments.map((row) => (
+            {appointments?.map((row) => (
               <TableRow key={row.id} hover>
                 <TableCell component="th" scope="row">
-                  {row.carrier}
+                  {row.carrier_id}
                 </TableCell>
-                <TableCell>{row.pickupLocation.address}</TableCell>
-                <TableCell>{row.appointmentDate}</TableCell>
+                <TableCell>{row.pickup_location_id}</TableCell>
+                <TableCell>{row.appointment_date.toString()}</TableCell>
                 <TableCell>
-                  <Chip label={row.status} />
+                  <Chip label={row.appointment_status} />
                 </TableCell>
               </TableRow>
             ))}
@@ -112,4 +130,4 @@ function Appointment() {
   );
 }
 
-export default Appointment;
+export default AppointmentsPage;

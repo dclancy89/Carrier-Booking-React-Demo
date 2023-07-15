@@ -76,6 +76,13 @@ export default function BookAppointment(props: BookAppointmentProps) {
 
   const snackbarTimeout = 5000;
 
+  React.useEffect(() => {
+    axios.get(`http://localhost:3000/locations/user/${id}`).then((res) => {
+      setLocations(res.data);
+      setLoading(false);
+    });
+  }, []);
+
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -103,13 +110,6 @@ export default function BookAppointment(props: BookAppointmentProps) {
         setLoadingBookableCarriers(false);
       });
   };
-
-  React.useEffect(() => {
-    axios.get(`http://localhost:3000/locations/user/${id}`).then((res) => {
-      setLocations(res.data);
-      setLoading(false);
-    });
-  }, []);
 
   const handleRequestAppointment = () => {
     axios
@@ -233,7 +233,12 @@ export default function BookAppointment(props: BookAppointmentProps) {
           >
             Request Appointment
           </Button>
-          <Button variant="contained" autoFocus onClick={handleClose}>
+          <Button
+            variant="contained"
+            color="error"
+            autoFocus
+            onClick={handleClose}
+          >
             Cancel
           </Button>
         </DialogActions>
