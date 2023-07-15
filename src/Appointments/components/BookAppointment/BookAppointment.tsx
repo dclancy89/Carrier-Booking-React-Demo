@@ -1,6 +1,7 @@
 import * as React from "react";
 import axios, { AxiosResponse } from "axios";
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -12,6 +13,7 @@ import {
   DialogContent,
   DialogActions,
   IconButton,
+  Snackbar,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -68,6 +70,25 @@ export default function BookAppointment(props: BookAppointmentProps) {
   const [chosenCarrier, setChosenCarrier] = React.useState<any>();
   const [loading, setLoading] = React.useState(true);
 
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = React.useState("");
+  const [snackbarMessage, setSnackbarMessage] = React.useState("");
+
+  const snackbarTimeout = 5000;
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const resetRequestState = () => {
+    setOpen(false);
+    setLocations([]);
+    setChosenLocation(null);
+    setAppointmentDate(null);
+    setBookableCarriers(null);
+    setChosenCarrier(null);
+  };
+
   const findCarriers = () => {
     if (!chosenLocation || !appointmentDate) {
       return null;
@@ -97,13 +118,18 @@ export default function BookAppointment(props: BookAppointmentProps) {
         carrierId: chosenCarrier?.id,
         appointmentDateTime: appointmentDate,
       })
-      .then((res) => console.log(res));
-    // appointments/book
-    /* 
-    
-    @Body() pickupLocationId: number,
-    @Body() carrierId: number,
-    @Body() appointmentDateTime: Date,*/
+      .then((res) => {
+        if (res.status === 201) {
+          setSnackbarSeverity("success");
+          setSnackbarMessage("Appointment successfully requested!");
+        } else {
+          setSnackbarSeverity("error");
+          setSnackbarMessage("Error requesting appointment. Please try again.");
+        }
+
+        setSnackbarOpen(true);
+        resetRequestState();
+      });
   };
 
   const handleClose = () => {
@@ -212,6 +238,16 @@ export default function BookAppointment(props: BookAppointmentProps) {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+        autoHideDuration={snackbarTimeout}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert severity={snackbarSeverity === "success" ? "success" : "error"}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
