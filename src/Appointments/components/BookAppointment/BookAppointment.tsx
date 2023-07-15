@@ -94,7 +94,7 @@ export default function BookAppointment(props: BookAppointmentProps) {
     axios
       .post("http://localhost:3000/appointments/book", {
         pickupLocationId: chosenLocation?.id,
-        carrierId: chosenCarrier.id,
+        carrierId: chosenCarrier?.id,
         appointmentDateTime: appointmentDate,
       })
       .then((res) => console.log(res));
