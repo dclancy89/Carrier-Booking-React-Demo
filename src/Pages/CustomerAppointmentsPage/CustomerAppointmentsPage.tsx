@@ -14,58 +14,10 @@ import {
   Typography,
 } from "@mui/material";
 
-import { Appointment } from "../types";
+import { Appointment } from "../../types";
 
 import BookAppointment from "./components/BookAppointment/BookAppointment";
 import { useParams } from "react-router-dom";
-
-const appointments = [
-  {
-    id: 1,
-    carrier: "Farm Pro Express",
-    pickupLocation: {
-      id: 1,
-      user_id: 1,
-      address: "21660 W. Field Pkwy",
-      city: "Deer Park",
-      state: "Illinois",
-      latitude: "42.1585546",
-      longitude: "-88.0593495",
-    },
-    appointmentDate: "2023-07-14T22:00:00.000Z",
-    status: "pending",
-  },
-  {
-    id: 2,
-    carrier: "Farm Pro Express",
-    pickupLocation: {
-      id: 1,
-      user_id: 1,
-      address: "21660 W. Field Pkwy",
-      city: "Deer Park",
-      state: "Illinois",
-      latitude: "42.1585546",
-      longitude: "-88.0593495",
-    },
-    appointmentDate: "2023-07-16T22:00:00.000Z",
-    status: "pending",
-  },
-  {
-    id: 3,
-    carrier: "Tractor Hauler",
-    pickupLocation: {
-      id: 1,
-      user_id: 1,
-      address: "21660 W. Field Pkwy",
-      city: "Deer Park",
-      state: "Illinois",
-      latitude: "42.1585546",
-      longitude: "-88.0593495",
-    },
-    appointmentDate: "2023-07-21T22:00:00.000Z",
-    status: "pending",
-  },
-];
 
 function AppointmentsPage() {
   const { id } = useParams();

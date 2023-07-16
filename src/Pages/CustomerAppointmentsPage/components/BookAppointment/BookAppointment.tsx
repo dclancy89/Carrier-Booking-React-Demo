@@ -23,7 +23,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { useParams } from "react-router-dom";
 
-import { Location } from "../../../types";
+import { Location } from "../../../../types";
 
 import "./styles.css";
 
