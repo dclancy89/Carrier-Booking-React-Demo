@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 
 import "./styles.css";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DGEUser } from "../../types";
 
 import { fetchLocalUser, removeLocalUser } from "../../utils";
@@ -25,8 +25,8 @@ export default function NavBar(props: { showNavLinks: boolean }) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const { showNavLinks } = props;
-  const { id } = useParams();
 
+  // Fetch the user
   React.useEffect(() => {
     const getUser = async () => {
       const userData = await fetchLocalUser();
@@ -39,6 +39,7 @@ export default function NavBar(props: { showNavLinks: boolean }) {
     setAnchorEl(event.currentTarget);
   };
 
+  // Handles closing the user menu
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -57,7 +58,7 @@ export default function NavBar(props: { showNavLinks: boolean }) {
             <>
               <Link
                 className="navLink"
-                href={`/${user.type}s/${id}/appointments`}
+                href={`/${user.type}s/${user.id}/appointments`}
               >
                 <Typography
                   variant="h6"
@@ -68,7 +69,10 @@ export default function NavBar(props: { showNavLinks: boolean }) {
                 </Typography>
               </Link>
 
-              <Link className="navLink" href={`/${user.type}s/${id}/locations`}>
+              <Link
+                className="navLink"
+                href={`/${user.type}s/${user.id}/locations`}
+              >
                 <Typography variant="h6" component="div" sx={{ flexGrow: 0 }}>
                   Locations
                 </Typography>

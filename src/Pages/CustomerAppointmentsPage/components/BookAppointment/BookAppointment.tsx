@@ -13,7 +13,6 @@ import {
   DialogContent,
   DialogActions,
   IconButton,
-  Snackbar,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -96,6 +95,8 @@ export default function BookAppointment(props: BookAppointmentProps) {
     setChosenCarrier(null);
   };
 
+  // This asks the backend for a list of carriers who can fulfil the appointment
+  // based on who can physically drive there before the appointment date/time
   const findCarriers = () => {
     if (!chosenLocation || !appointmentDate) {
       return null;
@@ -119,27 +120,6 @@ export default function BookAppointment(props: BookAppointmentProps) {
     );
     resetRequestState();
   };
-
-  // const handleRequestAppointment = () => {
-  //   axios
-  //     .post("http://localhost:3000/appointments/book", {
-  //       pickupLocationId: chosenLocation?.id,
-  //       carrierId: chosenCarrier?.id,
-  //       appointmentDateTime: appointmentDate,
-  //     })
-  //     .then((res) => {
-  //       if (res.status === 201) {
-  //         setSnackbarSeverity("success");
-  //         setSnackbarMessage("Appointment successfully requested!");
-  //       } else {
-  //         setSnackbarSeverity("error");
-  //         setSnackbarMessage("Error requesting appointment. Please try again.");
-  //       }
-
-  //       setSnackbarOpen(true);
-  //       resetRequestState();
-  //     });
-  // };
 
   const handleClose = () => {
     setOpen(false);

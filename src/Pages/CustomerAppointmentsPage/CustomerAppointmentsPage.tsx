@@ -24,18 +24,21 @@ import { fetchLocalUser } from "../../utils";
 
 function AppointmentsPage() {
   const [user, setUser] = React.useState<DGEUser | null>(null);
+  // This is the open state of the request appointment dialog
   const [open, setOpen] = React.useState(false);
   const [appointments, setAppointments] = React.useState<Appointment[] | null>(
     []
   );
   const [loading, setLoading] = React.useState<boolean>(false);
 
+  // For displaying the toast messages
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = React.useState("");
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
   const snackbarTimeout = 5000;
 
+  // Fetch the user
   React.useEffect(() => {
     const getUser = async () => {
       const userData = await fetchLocalUser();
@@ -44,6 +47,7 @@ function AppointmentsPage() {
     getUser();
   }, []);
 
+  // Fetch the appointments
   React.useEffect(() => {
     if (user) {
       axios
@@ -75,7 +79,6 @@ function AppointmentsPage() {
         appointmentDateTime,
       })
       .then((res) => {
-        console.log(res);
         if (res.status === 201) {
           appointments?.push(res.data);
           setSnackbarSeverity("success");

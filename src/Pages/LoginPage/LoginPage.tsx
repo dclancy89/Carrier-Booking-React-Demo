@@ -11,6 +11,7 @@ import {
   FormControl,
   Select,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 
@@ -51,6 +52,10 @@ function LoginPage() {
       navigate(`${loginUser?.type}s/${loginUser?.id}/appointments`);
     }
   };
+
+  if (loading) {
+    return <CircularProgress />;
+  }
 
   return (
     <>

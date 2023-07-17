@@ -29,12 +29,14 @@ function CarrierAppointmentsPage() {
   >([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 
+  // For displaying the toast messages
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = React.useState("");
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
   const snackbarTimeout = 5000;
 
+  // Fetch the user
   React.useEffect(() => {
     const getUser = async () => {
       const userData = await fetchLocalUser();
@@ -43,6 +45,7 @@ function CarrierAppointmentsPage() {
     getUser();
   }, []);
 
+  // Fetch the appointments
   React.useEffect(() => {
     if (user) {
       axios
@@ -93,6 +96,7 @@ function CarrierAppointmentsPage() {
         setSnackbarOpen(true);
       });
   };
+
   const handleDeclineAppointment = (appointmentId: number) => {
     const status = AppointmentStatus.DECLINED;
     axios

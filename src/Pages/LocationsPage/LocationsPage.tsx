@@ -13,11 +13,9 @@ import {
 } from "@mui/material";
 
 import { DGEUser, Location } from "../../types";
-import { useParams } from "react-router-dom";
 import { fetchLocalUser } from "../../utils";
 
 function LocationsPage() {
-  const { id } = useParams();
   const [user, setUser] = React.useState<DGEUser | null>(null);
   const [locations, setLocations] = React.useState<Location[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -32,10 +30,12 @@ function LocationsPage() {
 
   React.useEffect(() => {
     if (user) {
-      axios.get(`http://localhost:3000/locations/user/${id}`).then((res) => {
-        setLocations(res.data);
-        setLoading(false);
-      });
+      axios
+        .get(`http://localhost:3000/locations/user/${user.id}`)
+        .then((res) => {
+          setLocations(res.data);
+          setLoading(false);
+        });
     }
   }, [user]);
 
