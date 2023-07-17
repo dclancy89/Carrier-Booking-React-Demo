@@ -10,7 +10,6 @@ import {
   MenuItem,
   FormControl,
   Select,
-  Link,
   Typography,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
@@ -18,7 +17,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import "./styles.css";
 import NavBar from "../../components/NavBar/NavBar";
 
-import { UserType, DGEUser } from "../../types";
+import { DGEUser } from "../../types";
 import { setLocalUser } from "../../utils";
 
 enum userTypesEnum {
@@ -93,16 +92,6 @@ function LoginPage() {
           >
             Login
           </Button>
-          {/* <Link className="loginLink" href="/customers/1/appointments">
-          <Box className="loginButton" sx={{ backgroundColor: "#4287f5" }}>
-            Login as Customer
-          </Box>
-        </Link>
-        <Link className="loginLink" href="/carriers/1/appointments">
-          <Box className="loginButton" sx={{ backgroundColor: "#42f56c" }}>
-            Login as Carrier
-          </Box>
-        </Link> */}
         </Box>
       </Box>
     </>

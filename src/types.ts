@@ -26,6 +26,7 @@ export enum AppointmentStatus {
   ENROUTE = "enroute",
   ARRIVED = "arrived",
   COMPLETED = "completed",
+  DECLINED = "declined",
 }
 
 export interface Appointment {

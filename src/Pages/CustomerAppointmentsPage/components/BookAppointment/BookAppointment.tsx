@@ -23,7 +23,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { useParams } from "react-router-dom";
 
-import { Location } from "../../../../types";
+import { DGEUser, Location } from "../../../../types";
 
 import "./styles.css";
 
@@ -54,11 +54,17 @@ function DialogTitleWithClose(props: {
 interface BookAppointmentProps {
   open: boolean;
   setOpen: (state: boolean) => void;
+  user: DGEUser | null;
+  handleRequestAppointment: (
+    pickupLocationId: number | undefined,
+    carrierId: number,
+    appointmentDateTime: Date | undefined | null
+  ) => void;
 }
 
 export default function BookAppointment(props: BookAppointmentProps) {
   const { id } = useParams();
-  const { open, setOpen } = props;
+  const { open, setOpen, user, handleRequestAppointment } = props;
   const [locations, setLocations] = React.useState<Location[]>([]);
   const [chosenLocation, setChosenLocation] = React.useState<Location | null>(
     null
@@ -70,22 +76,16 @@ export default function BookAppointment(props: BookAppointmentProps) {
   const [chosenCarrier, setChosenCarrier] = React.useState<any>();
   const [loading, setLoading] = React.useState(true);
 
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
-  const [snackbarSeverity, setSnackbarSeverity] = React.useState("");
-  const [snackbarMessage, setSnackbarMessage] = React.useState("");
-
-  const snackbarTimeout = 5000;
-
   React.useEffect(() => {
-    axios.get(`http://localhost:3000/locations/user/${id}`).then((res) => {
-      setLocations(res.data);
-      setLoading(false);
-    });
-  }, []);
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
+    if (user) {
+      axios
+        .get(`http://localhost:3000/locations/user/${user?.id}`)
+        .then((res) => {
+          setLocations(res.data);
+          setLoading(false);
+        });
+    }
+  }, [user]);
 
   const resetRequestState = () => {
     setOpen(false);
@@ -111,26 +111,35 @@ export default function BookAppointment(props: BookAppointmentProps) {
       });
   };
 
-  const handleRequestAppointment = () => {
-    axios
-      .post("http://localhost:3000/appointments/book", {
-        pickupLocationId: chosenLocation?.id,
-        carrierId: chosenCarrier?.id,
-        appointmentDateTime: appointmentDate,
-      })
-      .then((res) => {
-        if (res.status === 201) {
-          setSnackbarSeverity("success");
-          setSnackbarMessage("Appointment successfully requested!");
-        } else {
-          setSnackbarSeverity("error");
-          setSnackbarMessage("Error requesting appointment. Please try again.");
-        }
-
-        setSnackbarOpen(true);
-        resetRequestState();
-      });
+  const handleRequestClick = () => {
+    handleRequestAppointment(
+      chosenLocation?.id,
+      chosenCarrier?.id,
+      appointmentDate
+    );
+    resetRequestState();
   };
+
+  // const handleRequestAppointment = () => {
+  //   axios
+  //     .post("http://localhost:3000/appointments/book", {
+  //       pickupLocationId: chosenLocation?.id,
+  //       carrierId: chosenCarrier?.id,
+  //       appointmentDateTime: appointmentDate,
+  //     })
+  //     .then((res) => {
+  //       if (res.status === 201) {
+  //         setSnackbarSeverity("success");
+  //         setSnackbarMessage("Appointment successfully requested!");
+  //       } else {
+  //         setSnackbarSeverity("error");
+  //         setSnackbarMessage("Error requesting appointment. Please try again.");
+  //       }
+
+  //       setSnackbarOpen(true);
+  //       resetRequestState();
+  //     });
+  // };
 
   const handleClose = () => {
     setOpen(false);
@@ -228,7 +237,7 @@ export default function BookAppointment(props: BookAppointmentProps) {
         <DialogActions>
           <Button
             variant="contained"
-            onClick={handleRequestAppointment}
+            onClick={handleRequestClick}
             disabled={chosenCarrier ? false : true}
           >
             Request Appointment
@@ -243,16 +252,6 @@ export default function BookAppointment(props: BookAppointmentProps) {
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar
-        open={snackbarOpen}
-        onClose={handleSnackbarClose}
-        autoHideDuration={snackbarTimeout}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert severity={snackbarSeverity === "success" ? "success" : "error"}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </>
   );
 }

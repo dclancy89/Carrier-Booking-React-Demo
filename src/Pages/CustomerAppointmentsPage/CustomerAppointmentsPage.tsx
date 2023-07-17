@@ -2,9 +2,11 @@ import * as React from "react";
 import axios from "axios";
 
 import {
+  Alert,
   Button,
   Chip,
   Paper,
+  Snackbar,
   Table,
   TableBody,
   TableCell,
@@ -14,30 +16,78 @@ import {
   Typography,
 } from "@mui/material";
 
-import { Appointment } from "../../types";
+import { Appointment, DGEUser } from "../../types";
 
 import BookAppointment from "./components/BookAppointment/BookAppointment";
 import { useParams } from "react-router-dom";
+import { fetchLocalUser } from "../../utils";
 
 function AppointmentsPage() {
   const { id } = useParams();
+  const [user, setUser] = React.useState<DGEUser | null>(null);
   const [open, setOpen] = React.useState(false);
   const [appointments, setAppointments] = React.useState<Appointment[] | null>(
     []
   );
   const [loading, setLoading] = React.useState<boolean>(false);
 
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = React.useState("");
+  const [snackbarMessage, setSnackbarMessage] = React.useState("");
+
+  const snackbarTimeout = 5000;
+
   React.useEffect(() => {
-    axios
-      .get(`http://localhost:3000/appointments/customer/${id}`)
-      .then((res) => {
-        setAppointments(res.data);
-        setLoading(false);
-      });
+    const getUser = async () => {
+      const userData = await fetchLocalUser();
+      setUser(userData);
+    };
+    getUser();
   }, []);
+
+  React.useEffect(() => {
+    if (user) {
+      axios
+        .get(`http://localhost:3000/appointments/customer/${id}`)
+        .then((res) => {
+          setAppointments(res.data);
+          setLoading(false);
+        });
+    }
+  }, [user]);
 
   const handleClickOpen = () => {
     setOpen(true);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleRequestAppointment = (
+    pickupLocationId: number | undefined,
+    carrierId: number,
+    appointmentDateTime: Date | undefined | null
+  ) => {
+    axios
+      .post("http://localhost:3000/appointments/book", {
+        pickupLocationId,
+        carrierId,
+        appointmentDateTime,
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.status === 201) {
+          appointments?.push(res.data);
+          setSnackbarSeverity("success");
+          setSnackbarMessage("Appointment successfully requested!");
+        } else {
+          setSnackbarSeverity("error");
+          setSnackbarMessage("Error requesting appointment. Please try again.");
+        }
+
+        setSnackbarOpen(true);
+      });
   };
 
   return (
@@ -77,7 +127,22 @@ function AppointmentsPage() {
           </TableBody>
         </Table>
       </TableContainer>
-      <BookAppointment open={open} setOpen={setOpen} />
+      <BookAppointment
+        open={open}
+        setOpen={setOpen}
+        user={user}
+        handleRequestAppointment={handleRequestAppointment}
+      />
+      <Snackbar
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+        autoHideDuration={snackbarTimeout}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert severity={snackbarSeverity === "success" ? "success" : "error"}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
