@@ -55,7 +55,10 @@ export default function NavBar(props: { showNavLinks: boolean }) {
           <img className="logo" src={logo} alt="FOB Logo" />
           {showNavLinks && user && (
             <>
-              <Link href={`/${user.type}s/${id}/appointments`}>
+              <Link
+                className="navLink"
+                href={`/${user.type}s/${id}/appointments`}
+              >
                 <Typography
                   variant="h6"
                   component="div"
@@ -65,7 +68,7 @@ export default function NavBar(props: { showNavLinks: boolean }) {
                 </Typography>
               </Link>
 
-              <Link href={`/${user.type}s/${id}/locations`}>
+              <Link className="navLink" href={`/${user.type}s/${id}/locations`}>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 0 }}>
                   Locations
                 </Typography>

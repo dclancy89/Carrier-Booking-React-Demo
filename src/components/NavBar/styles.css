@@ -2,3 +2,8 @@
   max-width: 125px;
   padding: 0 20px 0 10px;
 }
+
+.navLink {
+  color: white !important;
+  text-decoration: none !important;
+}

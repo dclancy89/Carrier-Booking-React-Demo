@@ -16,14 +16,11 @@ import {
   CircularProgress,
   Divider,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
 import { Appointment, AppointmentStatus, DGEUser } from "../../types";
 import { fetchLocalUser } from "../../utils";
 
 function CarrierAppointmentsPage() {
-  const { id } = useParams();
   const [user, setUser] = React.useState<DGEUser | null>(null);
-  const [open, setOpen] = React.useState(false);
   const [appointments, setAppointments] = React.useState<Appointment[] | null>(
     []
   );

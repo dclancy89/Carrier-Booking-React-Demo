@@ -5,6 +5,7 @@ import {
   Alert,
   Button,
   Chip,
+  CircularProgress,
   Paper,
   Snackbar,
   Table,
@@ -19,11 +20,9 @@ import {
 import { Appointment, DGEUser } from "../../types";
 
 import BookAppointment from "./components/BookAppointment/BookAppointment";
-import { useParams } from "react-router-dom";
 import { fetchLocalUser } from "../../utils";
 
 function AppointmentsPage() {
-  const { id } = useParams();
   const [user, setUser] = React.useState<DGEUser | null>(null);
   const [open, setOpen] = React.useState(false);
   const [appointments, setAppointments] = React.useState<Appointment[] | null>(
@@ -48,7 +47,7 @@ function AppointmentsPage() {
   React.useEffect(() => {
     if (user) {
       axios
-        .get(`http://localhost:3000/appointments/customer/${id}`)
+        .get(`http://localhost:3000/appointments/customer/${user.id}`)
         .then((res) => {
           setAppointments(res.data);
           setLoading(false);
@@ -112,6 +111,7 @@ function AppointmentsPage() {
             </TableRow>
           </TableHead>
           <TableBody>
+            {loading && <CircularProgress />}
             {appointments?.map((row) => (
               <TableRow key={row.id} hover>
                 <TableCell component="th" scope="row">

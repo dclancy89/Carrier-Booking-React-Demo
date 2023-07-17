@@ -9,22 +9,39 @@ import {
   TableRow,
   Typography,
   Paper,
+  CircularProgress,
 } from "@mui/material";
 
-import { Location } from "../../types";
+import { DGEUser, Location } from "../../types";
 import { useParams } from "react-router-dom";
+import { fetchLocalUser } from "../../utils";
 
 function LocationsPage() {
   const { id } = useParams();
+  const [user, setUser] = React.useState<DGEUser | null>(null);
   const [locations, setLocations] = React.useState<Location[]>([]);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    axios.get(`http://localhost:3000/locations/user/${id}`).then((res) => {
-      setLocations(res.data);
-      setLoading(false);
-    });
+    const getUser = async () => {
+      const userData = await fetchLocalUser();
+      setUser(userData);
+    };
+    getUser();
   }, []);
+
+  React.useEffect(() => {
+    if (user) {
+      axios.get(`http://localhost:3000/locations/user/${id}`).then((res) => {
+        setLocations(res.data);
+        setLoading(false);
+      });
+    }
+  }, [user]);
+
+  if (loading) {
+    return <CircularProgress />;
+  }
 
   return (
     <>
