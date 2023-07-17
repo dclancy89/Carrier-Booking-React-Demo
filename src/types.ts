@@ -1,6 +1,6 @@
 export enum UserType {
   CARRIER = "carrier",
-  CUSTOMER = "customer,",
+  CUSTOMER = "customer",
 }
 
 export interface DGEUser {
