@@ -17,7 +17,7 @@ import { DGEUser } from "../../types";
 
 import { fetchLocalUser, removeLocalUser } from "../../utils";
 
-import logo from "./FOBlogo242.png";
+import logo from "./dc-logo-white.png";
 
 export default function NavBar(props: { showNavLinks: boolean }) {
   const navigate = useNavigate();
